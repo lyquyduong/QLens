@@ -2,8 +2,8 @@
 
 **Every limit, in focus.**
 
-QLens manages your AI provider accounts and tracks how much of each one you have left — across
-116 providers, on macOS, Linux and Windows, as a desktop app, a terminal UI, and a scriptable CLI.
+QLens manages your AI provider accounts and tracks how much of each one you have left — from a
+registry of 116 providers, on macOS, Linux and Windows, as a desktop app, a terminal UI, and a scriptable CLI.
 
 The question QLens answers is not "here are forty numbers". It is **how much do I have left, and
 when does it reset.**
@@ -26,7 +26,7 @@ kiro              Free          monthly         ██░░░░░░░░�
 
 ## Status
 
-Early development, and **v0.1.1 is installable on macOS** — see below. Milestones land in order;
+Early development, and **v0.1.2 is installable on macOS** — see below. Milestones land in order;
 each one is gated on a verification step rather than a "looks done" judgement.
 [`docs/ROADMAP.md`](docs/ROADMAP.md) carries the detail: what is done, what each decision rests on,
 and what is blocked on a product call.
@@ -42,17 +42,17 @@ which is why there is nothing to clone.
 | **M2.5** First light | one provider end to end, from a terminal | ✅ |
 | **M3** Quota | per-provider quota sources, adaptive poller, history | 🟡 all 16 ids · mappings unverified against live accounts |
 | **M4** Daemon | one poller, many clients, over a local socket | 🟡 verified live on Unix · Windows transport written and type-checked, never executed |
-| **M5** Desktop | Tauri 2 shell, tray, notifications | 🟡 **ships in v0.1.1** — launched, and its window confirmed working · ad-hoc signed, not notarised · nothing starts the daemon for it |
+| **M5** Desktop | Tauri 2 shell, tray, notifications | 🟡 **ships since v0.1.1** — launched, and its window confirmed working · ad-hoc signed, not notarised · nothing starts the daemon for it |
 | **M6** TUI + CLI | Ratatui mirror, clap, shell-prompt output | 🟡 CLI is a daemon client, nine commands · TUI draws overview, catalogue and detail |
-| **M7** Analytics + ship | burn rate, cost, signed installers | 🟡 burn rate + projection · **v0.1.1 macOS universal binaries published, ad-hoc signed** · no Developer ID, no notarisation, no Homebrew tap, no Windows or Linux artefact |
+| **M7** Analytics + ship | burn rate, cost, signed installers | 🟡 burn rate + projection · **v0.1.2 macOS universal binaries published, ad-hoc signed** · no Developer ID, no notarisation, no Homebrew tap, no Windows or Linux artefact |
 
-### Install — macOS, v0.1.1
+### Install — macOS, v0.1.2
 
 The release carries three binaries as one universal (arm64 + x86_64) tarball. **`qlensd` is not
 optional**: every face is a client of it, and nothing starts it for you yet.
 
 ```bash
-V=0.1.1
+V=0.1.2
 curl -fsSLO https://github.com/lyquyduong/QLens/releases/download/v$V/qlens-$V-macos-universal.tar.gz
 curl -fsSLO https://github.com/lyquyduong/QLens/releases/download/v$V/SHA256SUMS
 shasum -a 256 -c SHA256SUMS          # verify before you run anything
@@ -66,16 +66,21 @@ qlens connect antigravity            # ⚠ real OAuth, opens a browser
 qlens quota
 ```
 
+**The catalogue offers three providers today** — `antigravity`, `claude` and `gemini-cli`. QLens
+still knows all 116: `qlens connect <id>` works for any of them and an existing connection keeps
+polling. What narrowed is what QLens recommends, because fifteen of the sixteen readable providers
+have never had their numbers checked against a real account.
+
 The binaries are **ad-hoc signed, not notarised**. `curl` does not set the quarantine attribute, so
 they run as downloaded; a `.dmg` fetched through a browser would be a different matter, and
 [`docs/running.md`](docs/running.md) covers that case.
 
 ### Install — the desktop app
 
-New in v0.1.1, and **ad-hoc signed rather than notarised**, which decides how you should fetch it.
+**Ad-hoc signed rather than notarised**, which decides how you should fetch it.
 
 ```bash
-V=0.1.1
+V=0.1.2
 curl -fsSLO https://github.com/lyquyduong/QLens/releases/download/v$V/qlens-$V-macos-app-universal.tar.gz
 tar xzf qlens-$V-macos-app-universal.tar.gz
 mv QLens.app /Applications/
