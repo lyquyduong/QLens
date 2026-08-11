@@ -26,7 +26,7 @@ kiro              Free          monthly         ██░░░░░░░░�
 
 ## Status
 
-Early development, and **v0.1.0 is installable on macOS** — see below. Milestones land in order;
+Early development, and **v0.1.1 is installable on macOS** — see below. Milestones land in order;
 each one is gated on a verification step rather than a "looks done" judgement.
 [`docs/ROADMAP.md`](docs/ROADMAP.md) carries the detail: what is done, what each decision rests on,
 and what is blocked on a product call.
@@ -42,17 +42,17 @@ which is why there is nothing to clone.
 | **M2.5** First light | one provider end to end, from a terminal | ✅ |
 | **M3** Quota | per-provider quota sources, adaptive poller, history | 🟡 all 16 ids · mappings unverified against live accounts |
 | **M4** Daemon | one poller, many clients, over a local socket | 🟡 verified live on Unix · Windows transport written and type-checked, never executed |
-| **M5** Desktop | Tauri 2 shell, tray, notifications | 🟡 shell, tray and notifications build · never launched with a window here |
+| **M5** Desktop | Tauri 2 shell, tray, notifications | 🟡 **ships in v0.1.1** — launched, and its window confirmed working · ad-hoc signed, not notarised · nothing starts the daemon for it |
 | **M6** TUI + CLI | Ratatui mirror, clap, shell-prompt output | 🟡 CLI is a daemon client, nine commands · TUI draws overview, catalogue and detail |
-| **M7** Analytics + ship | burn rate, cost, signed installers | 🟡 burn rate + projection · **v0.1.0 macOS universal binaries published, ad-hoc signed** · no Developer ID, no notarisation, no Homebrew tap, no Windows or Linux artefact |
+| **M7** Analytics + ship | burn rate, cost, signed installers | 🟡 burn rate + projection · **v0.1.1 macOS universal binaries published, ad-hoc signed** · no Developer ID, no notarisation, no Homebrew tap, no Windows or Linux artefact |
 
-### Install — macOS, v0.1.0
+### Install — macOS, v0.1.1
 
 The release carries three binaries as one universal (arm64 + x86_64) tarball. **`qlensd` is not
 optional**: every face is a client of it, and nothing starts it for you yet.
 
 ```bash
-V=0.1.0
+V=0.1.1
 curl -fsSLO https://github.com/lyquyduong/QLens/releases/download/v$V/qlens-$V-macos-universal.tar.gz
 curl -fsSLO https://github.com/lyquyduong/QLens/releases/download/v$V/SHA256SUMS
 shasum -a 256 -c SHA256SUMS          # verify before you run anything
@@ -70,10 +70,36 @@ The binaries are **ad-hoc signed, not notarised**. `curl` does not set the quara
 they run as downloaded; a `.dmg` fetched through a browser would be a different matter, and
 [`docs/running.md`](docs/running.md) covers that case.
 
+### Install — the desktop app
+
+New in v0.1.1, and **ad-hoc signed rather than notarised**, which decides how you should fetch it.
+
+```bash
+V=0.1.1
+curl -fsSLO https://github.com/lyquyduong/QLens/releases/download/v$V/qlens-$V-macos-app-universal.tar.gz
+tar xzf qlens-$V-macos-app-universal.tar.gz
+mv QLens.app /Applications/
+```
+
+**Prefer the tarball over the `.dmg`.** `curl` does not set the quarantine attribute, so the app
+opens normally. A `.dmg` downloaded through a browser *is* quarantined, and Gatekeeper refuses an
+un-notarised app — you would have to go to *System Settings → Privacy & Security → Open Anyway*.
+The `.dmg` is published for people who want it; the tarball is the path that just works.
+
+**The app does not start `qlensd`.** Open it without one running and you get an empty window with
+no explanation. That gap is real and it is the next thing worth closing.
+
+### The signed update manifest
+
 Every release also carries `latest.json` and `latest.json.minisig` — a minisign-signed manifest
-naming the tarball and its SHA-256. Nothing consumes it yet; it is what `qlens update` will verify
-against in 0.1.1, and publishing it from the first release means the upgrade path has something to
-upgrade *from*.
+naming the CLI tarball and its SHA-256, verifiable with the key compiled into every QLens binary:
+
+```bash
+minisign -Vm latest.json -P RWT6p3c9qDJv/3fb0L30JlkNT+SgYYdhaxIiXOLZaXbOcJPc4mKDH25p
+```
+
+Nothing consumes it yet — `qlens update` is still to come. Publishing it from the first release
+means the upgrade path has something to upgrade *from*.
 
 ### Building it instead
 
